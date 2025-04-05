@@ -26,7 +26,10 @@ def get_course_list():
         courses = response.json()
         if courses:
             for course in courses:
-               course_list.append(Course(course['id'], course['name'])) 
+               id=course['id']
+               name=course.get('name')
+               course_list.append(Course(id, name))
+                       
     else:
         print(f"Error: {response.status_code}")
         print(response.text)
