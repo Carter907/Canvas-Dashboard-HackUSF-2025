@@ -6,7 +6,7 @@ import requests
 import os
 
 access_token = os.environ.get('CANVAS_API_ACCESS_TOKEN')
-api_url = "https://usflearn.instructure.com/api/v1/courses"
+api_url = "https://usflearn.instructure.com/api/v1/"
 headers = {"Authorization": f"Bearer {access_token}"}
 
 class Course:
@@ -17,9 +17,12 @@ class Course:
     def __str__(self):
         return f"Course ID: {self.course_id}, Name: {self.name}" 
 
+def canvas_api_call(path):
+    return requests.get(api_url+path, headers=headers)
+
 
 def get_course_list():
-    response = requests.get(api_url, headers=headers)
+    response = canvas_api_call('/api/v1/courses') # add sub error
     course_list = []
 
     if response.status_code == 200:
