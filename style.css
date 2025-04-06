@@ -1,0 +1,49 @@
+body {
+  font-family: sans-serif;
+  background: #f8f9fa;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+}
+
+#response-box {
+  background: #f1f1f1;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+.gpa-grid {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.gpa-course-list,
+.gpa-total {
+  background: #f1f1f1;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  flex: 1;
+}
