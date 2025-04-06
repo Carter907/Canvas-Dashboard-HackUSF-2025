@@ -1,10 +1,32 @@
-<u1 id="event-list">
-    <!--  Events will go here  -->
+<table id="event-list" class="table-auto border-separate border border-gray-500 border-spacing-2">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Date</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for event in events %}
-    <li><a>
-        <strong>{{ event.title }} </strong> - {{ event.plannable_date }}
-    </a></li>
+    <tr>
+        <td>
+
+            <a href="{{ event.html_url }}">
+                <strong>{{ event.title }} </strong>
+            </a>
+        </td>
+        <td>
+            {{ event.plannable_date }}
+        </td>
+    </tr>
     {% else %}
-    <li>No events right now.</li>
+    <tr>
+        <td class="opacity-50 text-red-700">
+            No event data available.
+
+        </td>
+
+    </tr>
+
     {% endfor %}
-</u1>
+    </tbody>
+</table>

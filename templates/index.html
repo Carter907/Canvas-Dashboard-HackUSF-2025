@@ -15,11 +15,24 @@
 </head>
 <body>
 
-<div class="w-2/3 m-auto bg-gray-50 p-10 rounded-lg shadow-xl">
-    <form hx-post="/dashboard" target="outerHTML">
-        <label for="access-token">Access Token:</label>
-        <input class="border rounded" id="access-token" type="password" name="access_token">
-        <button class="shadow-md rounded" type="submit">continue to dashboard</button>
+<div class="m-auto w-2/3 bg-gray-50 p-10 rounded-lg shadow-xl">
+    <form class="flex flex-col gap-20 justify-center" hx-post="/dashboard" target="outerHTML">
+        <div class="flex gap-2 flex-col w-2/3">
+            <p class="text-2xl">AI Canvas Dashboard</p>
+            <p class="opacity-50">Please enter your access token to see your academic standing!</p>
+            <p>
+                Learn how to create and manage your Canvas access tokens<br> with this
+                <a class="text-blue-500 underline cursor-pointer"
+
+                href="https://community.canvaslms.com/t5/Canvas-Basics-Guide/How-do-I-manage-API-access-tokens-in-my-user-account/ta-p/615312" target="_blank">Canvas Community Guide.</a>
+            </p>
+        <label class="font-bold" for="access-token">Access Token:</label>
+        <input class="border rounded p-2" id="access-token"
+               type="password"
+               name="access_token">
+        </div>
+        <button class="bg-blue-400 text-white self-end shadow-md rounded" type="submit">continue to
+            dashboard</button>
     </form>
 
 

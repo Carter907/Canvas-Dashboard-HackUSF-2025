@@ -16,6 +16,15 @@ templates = Jinja2Templates(directory="templates/")
 
 @app.get("/events-list", response_class=HTMLResponse)
 async def events_list(request: Request, access_token: str):
+    if len(access_token) == 0:
+        return templates.TemplateResponse(
+            request=request,
+            name="events.html",
+            context={
+                "events": [],
+            }
+        )
+
     events = service.get_planner_events(access_token)
     return templates.TemplateResponse(
         request=request,
@@ -29,6 +38,15 @@ async def events_list(request: Request, access_token: str):
 
 @app.get("/course-list", response_class=HTMLResponse)
 async def course_list(request: Request, access_token: str):
+    if len(access_token) == 0:
+        return templates.TemplateResponse(
+            request=request,
+            name="course-list.html",
+            context={
+                "courses": [],
+            }
+        )
+
     courses = service.get_all_courses(access_token)
 
     return templates.TemplateResponse(
@@ -43,6 +61,15 @@ async def course_list(request: Request, access_token: str):
 
 @app.get("/total-gpa", response_class=HTMLResponse)
 async def total_gpa_page(request: Request, access_token: str):
+    if len(access_token) == 0:
+        return templates.TemplateResponse(
+            request=request,
+            name="total-gpa.html",
+            context={
+                "total_gpa": None,
+            }
+        )
+
     courses = service.get_all_courses(access_token)
     total_gpa = service.get_total_gpa(courses)
 
@@ -57,16 +84,32 @@ async def total_gpa_page(request: Request, access_token: str):
 
 @app.get("/course-advice", response_class=HTMLResponse)
 async def course_advice(request: Request, access_token: str):
+    if len(access_token) == 0:
+        return templates.TemplateResponse(
+            request=request,
+            name="course-advice.html",
+            context={
+                "advice": "An access token is required to access AI-power academic advice!",
+            }
+        )
     courses = service.get_all_courses(access_token)
-    total_gpa = service.get_total_gpa(courses)
 
-    worst_course=courses[0]
+    total_gpa = service.get_total_gpa(courses)
+    if len(courses) == 0:
+        return templates.TemplateResponse(
+            request=request,
+            name="course-advice.html",
+            context={
+                "advice": "An access token is required to access AI-power academic advice!",
+            }
+        )
+
+    worst_course = courses[0]
     for course in courses:
         if course.gpa < worst_course.gpa:
             worst_course = course
 
     llm_advice = llm.assignment_advice(total_gpa, worst_course)
-
 
     return templates.TemplateResponse(
         request=request,
@@ -77,11 +120,8 @@ async def course_advice(request: Request, access_token: str):
     )
 
 
-
-
 @app.post("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request, access_token: str = Form(...)):
-
     return templates.TemplateResponse(
         request=request,
         name="dashboard.html",
@@ -90,14 +130,13 @@ async def dashboard(request: Request, access_token: str = Form(...)):
         }
     )
 
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
     )
-
-
 
 
 if __name__ == "__main__":

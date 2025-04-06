@@ -32,8 +32,8 @@
         </div>
 
 
-        <div class="gpa-total">
-            <h3>Total GPA</h3>
+        <div class="gpa-total flex flex-col">
+            <h3 class="self-end">Total GPA</h3>
             <p class="animate-spin w-fit p-2 rounded-full border-2 border-dashed"
                hx-vals='{ "access_token": "{{ access_token }}" }'
                hx-get="/total-gpa"
@@ -59,8 +59,5 @@
             Assistant
             booting...
         </p>
-
     </div>
-
-
 </section>

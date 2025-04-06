@@ -1,8 +1,30 @@
-<u1 id="course-gpa-list">
+<table id="course-gpa-list"
+       class="table-auto border-separate border border-gray-500 border-spacing-2">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>GPA</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for course in courses %}
-    <li><strong>{{ course.name }} </strong> - {{ course.gpa }}</li>
+    <tr>
+        <td>
+            <strong>{{ course.name }} </strong>
+        </td>
+        <td>
+            {{ course.gpa }}
+        </td>
+    </tr>
     {% else %}
-    <li>No courses available.</li>
-    {% endfor %}
+    <tr>
+        <td class="opacity-50 text-red-700">
+            No course data available.
 
-</u1>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+    </tbody>
+</table>

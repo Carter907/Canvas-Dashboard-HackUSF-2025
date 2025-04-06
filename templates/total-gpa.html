@@ -1,1 +1,5 @@
+{% if total_gpa is not none %}
 <p id="total-gpa" class="text-4xl">{{ total_gpa }}</p>
+{% else %}
+<p class="opacity-50 text-red-700">Cannot calculate total gpa without course data.</p>
+{% endif %}
