@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,8 +15,8 @@ templates = Jinja2Templates(directory="templates/")
 
 
 @app.get("/events-list", response_class=HTMLResponse)
-async def events_list(request: Request):
-    events = service.get_planner_events()
+async def events_list(request: Request, access_token: str):
+    events = service.get_planner_events(access_token)
     return templates.TemplateResponse(
         request=request,
         name="events.html",
@@ -28,8 +28,8 @@ async def events_list(request: Request):
 
 
 @app.get("/course-list", response_class=HTMLResponse)
-async def course_list(request: Request):
-    courses = service.get_all_courses()
+async def course_list(request: Request, access_token: str):
+    courses = service.get_all_courses(access_token)
 
     return templates.TemplateResponse(
         request=request,
@@ -42,8 +42,8 @@ async def course_list(request: Request):
 
 
 @app.get("/total-gpa", response_class=HTMLResponse)
-async def total_gpa_page(request: Request):
-    courses = service.get_all_courses()
+async def total_gpa_page(request: Request, access_token: str):
+    courses = service.get_all_courses(access_token)
     total_gpa = service.get_total_gpa(courses)
 
     return templates.TemplateResponse(
@@ -56,8 +56,8 @@ async def total_gpa_page(request: Request):
 
 
 @app.get("/course-advice", response_class=HTMLResponse)
-async def course_advice(request: Request):
-    courses = service.get_all_courses()
+async def course_advice(request: Request, access_token: str):
+    courses = service.get_all_courses(access_token)
     total_gpa = service.get_total_gpa(courses)
 
     worst_course=courses[0]
@@ -77,12 +77,27 @@ async def course_advice(request: Request):
     )
 
 
+
+
+@app.post("/dashboard", response_class=HTMLResponse)
+async def dashboard(request: Request, access_token: str = Form(...)):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard.html",
+        context={
+            "access_token": access_token
+        }
+    )
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     return templates.TemplateResponse(
         request=request,
-        name="hackathon.html",
+        name="index.html",
     )
+
+
 
 
 if __name__ == "__main__":

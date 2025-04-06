@@ -7,24 +7,24 @@ import os
 import requests
 import parse
 
-access_token = os.environ.get('CANVAS_API_ACCESS_TOKEN')
+
 api_url = "https://usflearn.instructure.com/api/v1/"
-headers = {"Authorization": f"Bearer {access_token}"}
 
+def call_canvas_api(access_token, path, parameters):
+    headers = {"Authorization": f"Bearer {access_token}"}
 
-def call_canvas_api(path, parameters):
     return requests.get(api_url + path, headers=headers, params=parameters)
 
 
-def get_all_courses():
-    response = call_canvas_api('courses', parameters={})  # add sub error
+def get_all_courses(access_token):
+    response = call_canvas_api(access_token, 'courses', parameters={})  # add sub error
     course_list = []
 
     if response.status_code == 200:
         courses = response.json()
         if courses:
             for course in courses:
-                assignments = get_all_assignments(course.get('id'))
+                assignments = get_all_assignments(access_token, course.get('id'))
                 if len(assignments) == 0:
                     continue;
 
@@ -33,7 +33,7 @@ def get_all_courses():
                         course_id=course.get('id'),
                         name=course.get('name'),
                         course_code=course.get('course_code'),
-                        gpa=get_gpa_for_course(course.get('id')),
+                        gpa=get_gpa_for_course(access_token, course.get('id')),
                         assignments=assignments
                     )
                 )
@@ -42,13 +42,14 @@ def get_all_courses():
         print(response.text)
     return course_list
 
-def get_planner_events():
+def get_planner_events(access_token):
     start=datetime.date.today()
     parameters = {
         'start_date': start.strftime('%Y-%m-%d'),
     }
 
-    response = call_canvas_api('planner/items', parameters=parameters)  # add sub error
+    response = call_canvas_api(access_token, 'planner/items', parameters=parameters)  # add sub
+    # error
     planner_list = []
 
     if response.status_code == 200:
@@ -74,10 +75,10 @@ def get_planner_events():
     return planner_list
 
 
-def get_gpa_for_course(course_id) -> None | int | float | Any:
+def get_gpa_for_course(access_token, course_id) -> None | int | float | Any:
     sum = 0
     count = 0
-    assignment_list = get_all_assignments(course_id)
+    assignment_list = get_all_assignments(access_token, course_id)
 
     if len(assignment_list) == 0:
         return None
@@ -111,13 +112,13 @@ def get_total_gpa(courses: list[model.Course]):
 
     return rounded_gpa
 
-def get_all_assignments(course_id):
+def get_all_assignments(access_token, course_id):
     parameters = {
         'include[]': 'submission',
         'order_by': 'position',
         'per_page': '100',
     }
-    response = call_canvas_api(f"courses/{course_id}/assignments", parameters)
+    response = call_canvas_api(access_token, f"courses/{course_id}/assignments", parameters)
 
     assignment_list: list[model.Assignment] = []
 

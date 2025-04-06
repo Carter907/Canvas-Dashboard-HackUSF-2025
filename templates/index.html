@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Canvas AI Assistant</title> <!--  tab title  -->
+
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" type="text/css"
+          media="all">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <!---->
+</head>
+<body>
+
+<div class="w-2/3 m-auto bg-gray-50 p-10 rounded-lg shadow-xl">
+    <form hx-post="/dashboard" target="outerHTML">
+        <label for="access-token">Access Token:</label>
+        <input class="border rounded" id="access-token" type="password" name="access_token">
+        <button class="shadow-md rounded" type="submit">continue to dashboard</button>
+    </form>
+
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<h1 class="text-4xl">Canvas AI Assistant Dashboard</h1>
+
+
+<!-- schedule section -->
+
+<section id="schedule">
+    <h2>Upcoming Events</h2>
+
+    <p class="animate-spin rounded-full w-fit p-2 border-dotted"
+       hx-vals='{"access_token": "{{ access_token }}"}'
+       hx-get="/events-list"
+       hx-trigger="load" hx-swap="outerHTML"> </p>
+
+</section>
+
+
+<!-- GPA section -->
+<section id="gpa">
+    <h2>GPA Overview</h2>
+    <div class="gpa-grid">
+
+        <div class="gpa-course-list">
+            <h3>Per Course GPA</h3>
+
+            <div class="animate-spin rounded-full w-fit p-2 border-dotted"
+                 hx-vals='{ "access_token": "{{ access_token }}" }'
+                 hx-get="/course-list"
+                 hx-trigger="load"
+                 hx-swap="outerHTML"> </div>
+
+
+        </div>
+
+
+        <div class="gpa-total">
+            <h3>Total GPA</h3>
+            <p class="animate-spin w-fit p-2 rounded-full border-dotted"
+               hx-vals='{ "access_token": "{{ access_token }}" }'
+               hx-get="/total-gpa"
+               hx-trigger="load"
+               hx-swap="outerHTML">
+            </p>
+        </div>
+
+
+    </div>
+</section>
+
+
+<!--  AI tips section  -->
+
+<section id="tips">
+    <h2>AI Assistant Tips...</h2>
+
+    <div id="response-box">
+        <p class="animate-pulse" hx-get="/course-advice" hx-trigger="load"
+           hx-vals='{ "access_token": "{{ access_token }}" }'
+           hx-swap="outerHTML">AI
+            Assistant
+            booting...
+        </p>
+
+    </div>
+
+
+</section>
