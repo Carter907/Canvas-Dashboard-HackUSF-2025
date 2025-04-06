@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Canvas AI Assistant</title> <!--  tab title  -->
+
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" type="text/css"
+          media="all">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <!---->
+</head>
+<body>
+
+<div class="w-2/3 m-auto bg-gray-50 p-10 rounded-lg shadow-xl">
+    <h1 class="text-4xl">Canvas AI Assistant Dashboard</h1>
+
+
+    <!-- schedule section -->
+
+    <section id="schedule">
+        <h2>Upcoming Events</h2>
+
+        <p hx-get="/events-list" hx-trigger="load" hx-swap="outerHTML">loading events...</p>
+
+    </section>
+
+
+    <!-- GPA section -->
+    <section id="gpa">
+        <h2>GPA Overview</h2>
+        <div class="gpa-grid">
+
+            <div class="gpa-course-list">
+                <h3>Per Course GPA</h3>
+
+                <p hx-get="/course-list" hx-trigger="load" hx-swap="outerHTML">loading courses..
+                    .</p>
+
+
+            </div>
+
+
+            <div class="gpa-total">
+                <h3>Total GPA</h3>
+                <p hx-get="/total-gpa" hx-trigger="load" hx-swap="outerHTML">loading total gpa..
+                    .</p>
+            </div>
+
+
+        </div>
+    </section>
+
+
+    <!--  AI tips section  -->
+
+    <section id="tips">
+        <h2>AI Assistant Tips...</h2>
+
+        <div id="response-box">
+            <p hx-get="/course-advice" hx-trigger="load" hx-swap="outerHTML">loading total gpa..
+                .</p>
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+</body>
+</html>

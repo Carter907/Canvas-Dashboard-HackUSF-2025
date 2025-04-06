@@ -1,0 +1,8 @@
+<u1 id="course-gpa-list">
+    {% for course in courses %}
+    <li><strong>{{ course.name }} </strong> - {{ course.gpa }}</li>
+    {% else %}
+    <li>No courses available.</li>
+    {% endfor %}
+
+</u1>

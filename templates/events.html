@@ -1,0 +1,10 @@
+<u1 id="event-list">
+    <!--  Events will go here  -->
+    {% for event in events %}
+    <li><a>
+        <strong>{{ event.title }} </strong> - {{ event.plannable_date }}
+    </a></li>
+    {% else %}
+    <li>No events right now.</li>
+    {% endfor %}
+</u1>

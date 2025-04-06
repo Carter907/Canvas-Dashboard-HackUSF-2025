@@ -24,3 +24,16 @@ class Assignment:
         self.html_url = html_url
         self.points_possible = points_possible
 
+class Plannable:
+    def __init__(self, plannable_id: str, context_type: str, title: str, plannable_date:
+    datetime,
+                 html_url:
+    str):
+        self.plannable_id = plannable_id
+        self.context_type = context_type
+        self.title = title
+        self.plannable_date = plannable_date
+        self.html_url = html_url
+        
+    def __str__(self):
+        return f"Plannable ID: {self.plannable_id}, Type: {self.context_type}, Title: {self.title}, Created At: {self.created_at}, HTML URL: {self.html_url}"

@@ -1,12 +1,10 @@
 import datetime
+from typing import Any
 
 import pytz
-
 import model
-
 import os
 import requests
-
 import parse
 
 access_token = os.environ.get('CANVAS_API_ACCESS_TOKEN')
@@ -26,13 +24,17 @@ def get_all_courses():
         courses = response.json()
         if courses:
             for course in courses:
+                assignments = get_all_assignments(course.get('id'))
+                if len(assignments) == 0:
+                    continue;
+
                 course_list.append(
                     model.Course(
-                        course.get('id'),
-                        course.get('name'),
-                        course.get('course_code'),
-                        get_all_assignments(course.get('id')),
-                        get_gpa_for_course(course.get('id'))
+                        course_id=course.get('id'),
+                        name=course.get('name'),
+                        course_code=course.get('course_code'),
+                        gpa=get_gpa_for_course(course.get('id')),
+                        assignments=assignments
                     )
                 )
     else:
@@ -40,8 +42,39 @@ def get_all_courses():
         print(response.text)
     return course_list
 
+def get_planner_events():
+    start=datetime.date.today()
+    parameters = {
+        'start_date': start.strftime('%Y-%m-%d'),
+    }
 
-def get_gpa_for_course(course_id) -> float:
+    response = call_canvas_api('planner/items', parameters=parameters)  # add sub error
+    planner_list = []
+
+    if response.status_code == 200:
+        items = response.json()
+        if items:
+            for planner_item in items:
+                
+                plannable_date=datetime.datetime.strptime(planner_item.get('plannable_date'), "%Y-%m-%dT%H:%M:%SZ")
+                plannable_date=parse.convert_to_edt(plannable_date)
+
+                planner_list.append(
+                    model.Plannable(
+                        plannable_id=planner_item.get('plannable_id'),
+                        title=planner_item.get('plannable').get('title'),
+                        plannable_date=plannable_date,
+                        context_type=planner_item.get('context_type'),
+                        html_url=planner_item.get('html_url'),
+                    )
+                )
+    else:
+        print(f"Error: {response.status_code}")
+        print(response.text)
+    return planner_list
+
+
+def get_gpa_for_course(course_id) -> None | int | float | Any:
     sum = 0
     count = 0
     assignment_list = get_all_assignments(course_id)
@@ -58,8 +91,25 @@ def get_gpa_for_course(course_id) -> float:
             count+=1;
     if count == 0:
         return 0
-    return ((sum / count)/100.0) * 4;
 
+    course_gpa = ((sum / count)/100.0) * 4
+    rounded_gpa = round(course_gpa * 100) / 100
+
+    return rounded_gpa;
+
+def get_total_gpa(courses: list[model.Course]):
+    if len(courses) == 0:
+        return None
+    sum=0
+    for course in courses:
+        if course.gpa is None:
+            sum+=4.0;
+            continue
+        sum+=course.gpa
+    total_gpa = sum/len(courses)
+    rounded_gpa = round(total_gpa*100)/100
+
+    return rounded_gpa
 
 def get_all_assignments(course_id):
     parameters = {
@@ -85,8 +135,7 @@ def get_all_assignments(course_id):
                         name=assignment.get('name'),
                         grade=assignment.get('submission').get('grade'),
                         course_id=assignment.get('course_id'),
-                        due_at=datetime.datetime.strptime(assignment.get(
-                            'due_at'), "%Y-%m-%dT%H:%M:%SZ")if assignment.get('due_at') else None,
+                        due_at=datetime.datetime.strptime(assignment.get('due_at'), "%Y-%m-%dT%H:%M:%SZ"),
                         lock_at=assignment.get('lock_at'),
                         html_url=assignment.get('html_url'),
                         points_possible=assignment.get('points_possible'),
